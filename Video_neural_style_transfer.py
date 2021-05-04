@@ -33,8 +33,8 @@ except OSError:
 
 # Deleting folder ( Video_from_images ) along with data present inside
 try :
-    if os.path.exists('/notebooks/Notebooks_2019/Style_Data/Video_from_images') :
-        shutil.rmtree('/notebooks/Notebooks_2019/Style_Data/Video_from_images')
+    if os.path.exists('/notebooks/Notebooks_2019/Style_Data/Gif_from_images') :
+        shutil.rmtree('/notebooks/Notebooks_2019/Style_Data/Gif_from_images')
 except OSError:
     print('Error in deleting directory')
 
@@ -47,8 +47,8 @@ except OSError:
 
 # Creating folder ( Video_from_images )
 try :
-    if not os.path.exists('/notebooks/Notebooks_2019/Style_Data/Video_from_images') :
-        os.makedirs('/notebooks/Notebooks_2019/Style_Data/Video_from_images')
+    if not os.path.exists('/notebooks/Notebooks_2019/Style_Data/Gif_from_images') :
+        os.makedirs('/notebooks/Notebooks_2019/Style_Data/Gif_from_images')
 except OSError:
     print('Error in creating directory')
 
@@ -362,7 +362,7 @@ def neural_transfer_execute (cnn ,normalization_mean ,normalization_std ,style_i
 #unloader(output.cpu().clone().squeeze(0)).save('/notebooks/Notebooks_2019/Style_Data/Output.jpg')
 
 
-path_modified_output_image = '/notebooks/Notebooks_2019/Style_Data/Video_from_images/'
+path_modified_output_image = '/notebooks/Notebooks_2019/Style_Data/Gif_from_images/'
 path_input_image = '/notebooks/Notebooks_2019/Style_Data/Images_from_video/'
 
 Style_image = image_loader('/notebooks/Notebooks_2019/Style_Data/Style15.jpg')
@@ -398,12 +398,14 @@ for x in range(len(image_files)) :
     unloader(output_image).save(output_image_filename)
 
 # Converting all Images to GIF
-path_input_image = '/notebooks/Notebooks_2019/Style_Data/Video_from_images/'
-path_output_image = '/notebooks/Notebooks_2019/Style_Data/final_video.mp4'
-frame_Rate = 2
+path_input_image = '/notebooks/Notebooks_2019/Style_Data/Gif_from_images/'
+path_output_image = '/notebooks/Notebooks_2019/Style_Data/final_gif.gif'
+
 frame_array = []
 image_files = [file for file in os.listdir(path_input_image) if isfile(join(path_input_image,file))]
 #print(image_files)
+#frame_Rate=2
+# Sorting files
 image_files.sort(key=lambda x:int(x[15:-4]))
 #print(image_files)
 for x in range(len(image_files)) :
@@ -414,11 +416,12 @@ for x in range(len(image_files)) :
     size=(w,h)
     frame_array.append(image) 
 
+# Converting all images to single gif
+frame_array[0].save(path_output_image,save_all = True, append_images = frame_array[1:],optimize = False, duration = 10)
+#output = cv2.VideoWriter(path_output_image,cv2.VideoWriter_fourcc(*'MJPG'),frame_Rate,size)
+#for i in range(len(frame_array)) :
+#    output.write(frame_array[i])
     
-output = cv2.VideoWriter(path_output_image,cv2.VideoWriter_fourcc(*'MJPG'),frame_Rate,size)
-for i in range(len(frame_array)) :
-    output.write(frame_array[i])
-    
-output.release()
-video.release()
+#output.release()
+#video.release()
 cv2.destroyAllWindows()
